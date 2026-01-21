@@ -1,0 +1,98 @@
+<form class="form-grid">
+    <div class="full-row">
+        <p>User Details</p>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Full Name</label>
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter Full Name">
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Email</label>
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter Email">
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Mobile Number</label>
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter Mobile Number">
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>DOB</label>
+        <mat-form-field appearance="outline">
+            <input matInput [matDatepicker]="dob" placeholder="Select DOB">
+            <mat-datepicker-toggle matIconSuffix [for]="dob"></mat-datepicker-toggle>
+            <mat-datepicker #dob></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Gender</label>
+        <mat-form-field appearance="outline">
+            <mat-select placeholder="Select Gender">
+                <mat-option value="one">First option</mat-option>
+                <mat-option value="two">Second option</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Designation</label>
+        <mat-form-field appearance="outline">
+            <input type="text" placeholder="Select Designation" matInput [formControl]="myControl" [matAutocomplete]="auto">
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete #auto="matAutocomplete">
+                @for (option of filteredOptions; track option) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                }
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Department</label>
+        <mat-form-field appearance="outline">
+            <input type="text" placeholder="Select Department" matInput [formControl]="myControl" [matAutocomplete]="auto">
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete #auto="matAutocomplete">
+                @for (option of filteredOptions; track option) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                }
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Role</label>
+        <mat-form-field appearance="outline">
+            <mat-select placeholder="Select Role">
+                <mat-option value="one">First option</mat-option>
+                <mat-option value="two">Second option</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Status</label>
+        <mat-form-field appearance="outline">
+            <mat-select placeholder="Select Status">
+                <mat-option value="one">First option</mat-option>
+                <mat-option value="two">Second option</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper full-row">
+        <label>Address</label>
+        <mat-form-field appearance="outline">
+            <textarea matInput rows="4" placeholder="Description"></textarea>
+        </mat-form-field>
+    </div>
+</form>

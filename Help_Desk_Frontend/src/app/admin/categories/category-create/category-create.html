@@ -1,0 +1,35 @@
+<form class="form-grid">
+    <div class="full-row">
+        <p>Category Details</p>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Name</label>
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter Full Name">
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper">
+        <label>Status</label>
+        <mat-form-field appearance="outline">
+            <mat-select placeholder="Select Status">
+                <mat-option value="one">First option</mat-option>
+                <mat-option value="two">Second option</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="form-field-wrapper full-row">
+        <label>Description</label>
+        <mat-form-field appearance="outline">
+            <textarea matInput rows="3" placeholder="Description"></textarea>
+        </mat-form-field>
+    </div>
+
+    <div class="full-row" style="display: flex; justify-content: flex-end; gap: 14px">
+        <button matButton="outlined" style="width: 80px;" (click)="closeDialog()">Cancel</button>
+        <button matButton="filled" style="width: 80px;">Add</button>
+    </div>
+</form>
+

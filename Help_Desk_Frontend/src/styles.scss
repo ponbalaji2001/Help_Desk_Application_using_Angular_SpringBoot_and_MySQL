@@ -1,0 +1,65 @@
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    container-text-size: 14px,
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
+
+:root {
+  @include mat.form-field-overrides((
+    container-text-size: 14px,
+    outlined-label-text-size: 14px,
+    filled-label-text-size: 14px,
+    subscript-text-size: 14px,
+    container-height: 20px,
+    container-vertical-padding: 8px,
+    outlined-input-text-placeholder-color: #a0a0a0,
+    trailing-icon-color: #6b7280
+  ));
+
+  @include mat.select-overrides((
+    trigger-text-size: 14px,
+    placeholder-text-color: #a0a0a0
+  ));
+
+  @include mat.datepicker-overrides((
+    calendar-text-size: 14px,
+    calendar-period-button-text-size: 14px,
+    calendar-header-text-size: 14px,
+    calendar-body-label-text-size: 14px,
+    toggle-icon-color: #6b7280
+  ));
+
+  @include mat.table-overrides((
+    header-headline-size: 14.5px
+  ));
+
+  .cdk-overlay-pane .mat-mdc-option {
+    
+    .mdc-list-item__primary-text {
+      font-size: 14px;
+    }
+
+  }
+
+  .mat-mdc-select-arrow{
+    color: #6b7280;
+  }
+}

@@ -1,0 +1,44 @@
+.custom-table{
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .table-container{
+        padding-bottom: 10px;
+        max-height: 80vh;
+        overflow: auto;
+
+        table {
+            .mat-mdc-header-cell {
+                border-top-color: var(--mat-sys-outline, rgba(0, 0, 0, 0.12));
+                border-top-width: 1px;
+                border-top-style: solid;
+                // color: var(--mat-button-filled-label-text-color, var(--mat-sys-on-primary));
+                // background-color: var(--mat-button-filled-container-color, var(--mat-sys-primary));
+                background-color: #e0e2ec;
+            }
+
+            .action-btns{
+                display: flex;
+                align-items: center;
+
+                button {
+                    .mat-icon{
+                        height: 18px;
+                        width: 18px;
+                        font-size: 18px;
+                    }
+                }
+            }
+        }
+
+        .mat-divider{
+            border-top-color: var(--mat-sys-outline, rgba(0, 0, 0, 0.12));
+            border-bottom-width: 1px;
+        }
+    }
+
+    .paginator {
+        padding-top: 10px;
+    }
+}
+

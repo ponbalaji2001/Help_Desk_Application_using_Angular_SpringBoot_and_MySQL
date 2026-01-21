@@ -1,0 +1,43 @@
+.table-header{
+  padding: 10px;
+
+  .title{
+    padding-bottom: 15px;
+  }
+
+  .table-header-actions{
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    column-gap: 20px;  
+    align-items: center;
+    padding-bottom: 5px;
+  }
+
+  ::ng-deep .table-header-actions
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none 
+    }
+
+  .filter-card{
+    margin-top: 14px;
+
+    .form-grid {
+      padding-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 40px;  
+      row-gap: 16px;      
+    }
+
+    .full-row {
+      grid-column: span 2;
+    }
+
+    .form-field-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
+

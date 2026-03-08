@@ -3,97 +3,119 @@
     <div class="title">
       <h1>Users</h1>
     </div>
-    <div class="table-header-actions">
-      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-        <mat-button-toggle value="All">All</mat-button-toggle>
+    @if(pageLoading === false){
+      <div class="table-header-actions">
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" 
+          [field]="filterForm.role">
+          <mat-button-toggle value="">All</mat-button-toggle>
 
-        @for(entry of roles().entries(); track entry[0]) {
-          <mat-button-toggle [value]="entry[0]">{{ entry[1] }}</mat-button-toggle>
-        }
-      </mat-button-toggle-group>
-      <div></div>
-      <mat-form-field appearance="outline" style="width: 500px;">
-        <input matInput placeholder="Search by ID / Name / Email" [field]="filterForm.search">
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-      <button matIconButton disabled aria-label="Example icon button with a open in new tab icon">
-        <mat-icon>filter_alt</mat-icon>
-      </button>
-    </div>
+          @for(entry of roles().entries(); track entry[0]) {
+            <mat-button-toggle [value]="entry[0]">{{ entry[1] }}</mat-button-toggle>
+          }
+        </mat-button-toggle-group>
+        <div></div>
+        <button matButton="outlined" routerLink="/user/create">
+          <mat-icon matSuffix>add</mat-icon>
+          Add
+        </button>
+        <mat-form-field appearance="outline" style="width: 500px;">
+          <input matInput placeholder="Search by ID / Name / Email" [field]="filterForm.search">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <button matIconButton (click)="isShowFilter.set(true)" [disabled]="loading()">
+          <mat-icon [style.color]="isShowFilter() === true || activeFilterCount() > 0 ? 'var(--mat-sys-primary)': 'var(--mat-icon-color)'">filter_alt</mat-icon>
+        </button>
+      </div>
 
-    <mat-card class="filter-card" appearance="outlined">
-      <mat-card-header style="display:flex; align-items:center; justify-content:space-between">
-        <mat-card-title>Filter</mat-card-title>
-        <mat-icon matSuffix>close</mat-icon>
-      </mat-card-header>
-      <mat-card-content>
-        <form class="form-grid">
-            <div class="form-field-wrapper">
-                <label>Designation</label>
-                <mat-form-field appearance="outline">
-                    <input type="text" placeholder="Select Designation" matInput [matAutocomplete]="auto" [field]="filterForm.designation">
-                    <mat-icon matSuffix>manage_search</mat-icon>
-                    <mat-autocomplete #auto="matAutocomplete">
-                        @for(entry of filteredDesignations(); track entry[0]) {
-                          <mat-option [value]="entry[0]">
-                            {{ entry[1] }}
-                          </mat-option>
-                        }
-                    </mat-autocomplete>
-                </mat-form-field>
-            </div>
+      @if(isShowFilter() === true || activeFilterCount() > 0) {
+        <mat-card class="filter-card" appearance="outlined">
+          <mat-card-header style="display:flex; align-items:center; justify-content:space-between">
+            <mat-card-title>
+              Filter <span class="filter-count">({{ activeFilterCount() }})</span>
+            </mat-card-title>
+            <button matIconButton (click)="clearFilter(); isShowFilter.set(false);">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <form class="form-grid">
+                <div class="form-field-wrapper">
+                    <label>Designation</label>
+                    <mat-form-field appearance="outline">
+                        <input type="text" placeholder="Select Designation" matInput [matAutocomplete]="designationAuto" 
+                          [field]="filterForm.designation">
+                        <mat-icon matSuffix>manage_search</mat-icon>
+                        <mat-autocomplete #designationAuto="matAutocomplete" [displayWith]="getMapValue.bind(this, 'designation')" >
+                            @for(entry of filteredDesignations(); track entry[0]) {
+                              <mat-option [value]="entry[0]">
+                                {{ entry[1] }}
+                              </mat-option>
+                            }
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
 
-            <div class="form-field-wrapper">
-                <label>Department</label>
-                <mat-form-field appearance="outline">
-                    <input type="text" placeholder="Select Department" matInput [matAutocomplete]="auto" [field]="filterForm.department">
-                    <mat-icon matSuffix>manage_search</mat-icon>
-                    <mat-autocomplete #auto="matAutocomplete">
-                      @for(entry of filteredDepartments(); track entry[0]) {
-                        <mat-option [value]="entry[0]">
-                          {{ entry[1] }}
-                        </mat-option>
-                      }
-                    </mat-autocomplete>
-                </mat-form-field>
-            </div>
+                <div class="form-field-wrapper">
+                    <label>Department</label>
+                    <mat-form-field appearance="outline">
+                        <input type="text" placeholder="Select Department" matInput [matAutocomplete]="departmentAuto"  
+                          [field]="filterForm.department">
+                        <mat-icon matSuffix>manage_search</mat-icon>
+                        <mat-autocomplete #departmentAuto="matAutocomplete" [displayWith]="getMapValue.bind(this, 'department')">
+                          @for(entry of filteredDepartments(); track entry[0]) {
+                            <mat-option [value]="entry[0]">
+                              {{ entry[1] }}
+                            </mat-option>
+                          }
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
 
-            <div class="form-field-wrapper">
-                <label>Role</label>
-                <mat-form-field appearance="outline">
-                    <mat-select placeholder="Select Role" [field]="filterForm.role">
-                      @for(entry of roles().entries(); track entry[0]) {
-                        <mat-option [value]="entry[0]">
-                          {{ entry[1] }}
-                        </mat-option>
-                      }
-                    </mat-select>
-                </mat-form-field>
-            </div>
+                <!-- <div class="form-field-wrapper">
+                    <label>Role</label>
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Select Role" [field]="filterForm.role">
+                          @for(entry of roles().entries(); track entry[0]) {
+                            <mat-option [value]="entry[0]">
+                              {{ entry[1] }}
+                            </mat-option>
+                          }
+                        </mat-select>
+                    </mat-form-field>
+                </div> -->
 
-            <div class="form-field-wrapper">
-                <label>Status</label>
-                <mat-form-field appearance="outline">
-                    <mat-select placeholder="Select Status" [field]="filterForm.status">
-                      @for(entry of statuses().entries(); track entry[0]) {
-                        <mat-option [value]="entry[0]">
-                          {{ entry[1] }}
-                        </mat-option>
-                      }
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </form>
-      </mat-card-content>
-      <mat-card-actions style="display: flex; justify-content: flex-end; gap: 14px; margin-bottom: 10px;">
-        <button matButton="outlined" style="width: 80px;">Clear</button>
-        <button matButton="filled" style="width: 80px;">Submit</button>
-      </mat-card-actions>
-    </mat-card>
+                <div class="form-field-wrapper">
+                    <label>Status</label>
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Select Status" [field]="filterForm.status">
+                          @for(entry of statuses().entries(); track entry[0]) {
+                            <mat-option [value]="entry[0]">
+                              {{ entry[1] }}
+                            </mat-option>
+                          }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </form>
+          </mat-card-content>
+          <mat-card-actions class="action-btns">
+            <button matButton="outlined" style="width: 80px;" [disabled]="loading()" (click)="clearFilter()">Clear</button>
+            <button matButton="filled" style="width: 80px;" [disabled]="loading()" (click)="applyFilter()">Apply</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    }
   </div>
 
-  <app-custom-table [colNames]="colNames" [data]="users" [dataSize]="totalUsers" [showIndex]="true" [pageSize]="pageSize" [pageIndex]="pageIndex"
-    (sortChange)="onSortChange($event)" (pageChange)="onPageChange($event)" (view)="onView($event)" (edit)="onEdit($event)" (edit)="onDelete($event)"
-    [mapColNames]="mapColNames" [mapValueResolver]="getMapValue">
-  </app-custom-table>
+  @if(pageLoading === true){
+    <div class="loader">
+      <app-loader></app-loader>
+    </div>
+  }
+  @else{
+    <app-custom-table [colNames]="colNames" [data]="users" [dataSize]="totalUsers" [showIndex]="true" [pageSize]="filterForm.size().value" [pageIndex]="filterForm.page().value"
+      (sortChange)="onSortChange($event)" [sortBy]="filterForm().value().sortBy" [sortDir]="filterForm().value().sortDir" (pageChange)="onPageChange($event)" (view)="onView($event)" 
+      (edit)="onEdit($event)" (delete)="onDelete($event)" [mapColNames]="mapColNames" [mapValueResolver]="getMapValue" [loading]="loading">
+    </app-custom-table>
+  }
 </div>

@@ -40,6 +40,10 @@ export class UserService {
     return this.http.get<TableResponseModel<UserModel>>(`${this.apiUrl}/list`, { params: httpParams });
   }
 
+  getUser(id: number): Observable<UserModel> {
+    return this.http.get<UserModel>(`${this.apiUrl}/${id}`);
+  }
+
   createUser(user: UserModel): Observable<UserModel> {
     return this.http.post<UserModel>(this.apiUrl, user);
   }

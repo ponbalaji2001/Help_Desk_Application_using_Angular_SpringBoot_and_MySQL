@@ -1,17 +1,68 @@
-.form-grid {
+.user-create {
   padding: 20px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 40px;  
-  row-gap: 18px;      
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 40px;   
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
+
+    .loader{
+      height: 100%;
+      display: flex;
+      align-items: center;   
+      justify-content: center; 
+
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.5);
+      z-index: 10;
+    }
+
+    .title p{
+      font-size: 24px;
+      font-weight: 500;
+      margin-block-start: 0em;
+      margin-block-end: 1.8em;
+    }
+
+     .mat-mdc-form-field {
+        width: 100%;
+     }
+
+     .full-row {
+      grid-column: span 3;
+    }
+
+
+    .form-field-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 120px;
+    }
+
+    .form-field-wrapper-2 {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 185px;
+    }
+
+    .mat-mdc-form-field-error {
+      margin-top: -25px;
+    }
+
+    .action-btns{
+      display: flex; 
+      justify-content: flex-end; 
+      gap: 16px; 
+    }
+  }
+
 }
 
-.full-row {
-  grid-column: span 3;
-}
-
-.form-field-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}

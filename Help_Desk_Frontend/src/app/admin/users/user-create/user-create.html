@@ -1,98 +1,184 @@
-<form class="form-grid">
-    <div class="full-row">
-        <p>User Details</p>
-    </div>
+<div class="user-create">
+    @if(pageLoading === true){
+        <div class="loader">
+        <app-loader></app-loader>
+        </div>
+    }
+    @else{
+       
+        <form class="form-grid" (submit)="onSubmit($event)">
+            @if(loading() === true){
+                <div class="loader">
+                    <app-loader [diameter]="100" [stroke]="6"></app-loader>
+                </div>
+            }
 
-    <div class="form-field-wrapper">
-        <label>Full Name</label>
-        <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter Full Name">
-        </mat-form-field>
-    </div>
+            <div class="full-row title">
+                <p>User Details</p>
+            </div>
 
-    <div class="form-field-wrapper">
-        <label>Email</label>
-        <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter Email">
-        </mat-form-field>
-    </div>
+            <div class="form-field-wrapper">
+                <label>Full Name</label>
+                <mat-form-field appearance="outline">
+                    <input matInput placeholder="Enter Full Name" [field]="userForm.name">
+                </mat-form-field>
+                @if(userForm.name().touched() && userForm.name().invalid()) {
+                    @for(error of userForm.name().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
 
-    <div class="form-field-wrapper">
-        <label>Mobile Number</label>
-        <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter Mobile Number">
-        </mat-form-field>
-    </div>
+            <div class="form-field-wrapper">
+                <label>Email</label>
+                <mat-form-field appearance="outline">
+                    <input matInput placeholder="Enter Email" [field]="userForm.email">
+                </mat-form-field>
+                @if(userForm.email().touched() && userForm.email().invalid()) {
+                    @for(error of userForm.email().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
 
-    <div class="form-field-wrapper">
-        <label>DOB</label>
-        <mat-form-field appearance="outline">
-            <input matInput [matDatepicker]="dob" placeholder="Select DOB">
-            <mat-datepicker-toggle matIconSuffix [for]="dob"></mat-datepicker-toggle>
-            <mat-datepicker #dob></mat-datepicker>
-        </mat-form-field>
-    </div>
+            <div class="form-field-wrapper">
+                <label>Mobile Number</label>
+                <mat-form-field appearance="outline">
+                    <input matInput placeholder="Enter Mobile Number" [field]="userForm.mobile_no">
+                </mat-form-field>
+                @if(userForm.mobile_no().touched() && userForm.mobile_no().invalid()) {
+                    @for(error of userForm.mobile_no().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
 
-    <div class="form-field-wrapper">
-        <label>Gender</label>
-        <mat-form-field appearance="outline">
-            <mat-select placeholder="Select Gender">
-                <mat-option value="one">First option</mat-option>
-                <mat-option value="two">Second option</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+            <div class="form-field-wrapper">
+                <label>DOB</label>
+                <mat-form-field appearance="outline">
+                    <input matInput [matDatepicker]="dob" placeholder="Select DOB" [field]="userForm.dob">
+                    <mat-datepicker-toggle matIconSuffix [for]="dob"></mat-datepicker-toggle>
+                    <mat-datepicker #dob></mat-datepicker>
+                </mat-form-field>
+                @if(userForm.dob().touched() && userForm.dob().invalid()) {
+                    @for(error of userForm.dob().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
 
-    <div class="form-field-wrapper">
-        <label>Designation</label>
-        <mat-form-field appearance="outline">
-            <input type="text" placeholder="Select Designation" matInput [formControl]="myControl" [matAutocomplete]="auto">
-            <mat-icon matSuffix>search</mat-icon>
-            <mat-autocomplete #auto="matAutocomplete">
-                @for (option of filteredOptions; track option) {
-                    <mat-option [value]="option">{{option}}</mat-option>
-                }
-            </mat-autocomplete>
-        </mat-form-field>
-    </div>
+            <div class="form-field-wrapper">
+                <label>Gender</label>
+                <mat-form-field appearance="outline">
+                    <mat-select placeholder="Select Gender" [field]="userForm.gender">
+                        @for(entry of genders().entries(); track entry[0]) {
+                            <mat-option [value]="entry[0]">
+                                {{ entry[1] }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                @if(userForm.gender().touched() && userForm.gender().invalid()) {
+                    @for(error of userForm.gender().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
 
-    <div class="form-field-wrapper">
-        <label>Department</label>
-        <mat-form-field appearance="outline">
-            <input type="text" placeholder="Select Department" matInput [formControl]="myControl" [matAutocomplete]="auto">
-            <mat-icon matSuffix>search</mat-icon>
-            <mat-autocomplete #auto="matAutocomplete">
-                @for (option of filteredOptions; track option) {
-                    <mat-option [value]="option">{{option}}</mat-option>
-                }
-            </mat-autocomplete>
-        </mat-form-field>
-    </div>
+            <div class="form-field-wrapper">
+                <label>Designation</label>
+                <mat-form-field appearance="outline">
+                    <input type="text" placeholder="Select Designation" matInput [matAutocomplete]="designationAuto"
+                    [field]="userForm.designation">
+                    <mat-icon matSuffix>search</mat-icon>
+                    <mat-autocomplete #designationAuto="matAutocomplete" [displayWith]="getMapValue.bind(this, 'designation')">
+                        @for(entry of filteredDesignations(); track entry[0]) {
+                            <mat-option [value]="entry[0]">
+                                {{ entry[1] }}
+                            </mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+                @if(userForm.designation().touched() && userForm.designation().invalid()) {
+                    @for(error of userForm.designation().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
 
-    <div class="form-field-wrapper">
-        <label>Role</label>
-        <mat-form-field appearance="outline">
-            <mat-select placeholder="Select Role">
-                <mat-option value="one">First option</mat-option>
-                <mat-option value="two">Second option</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+            <div class="form-field-wrapper">
+                <label>Department</label>
+                <mat-form-field appearance="outline">
+                    <input type="text" placeholder="Select Department" matInput [matAutocomplete]="departmentAuto"
+                    [field]="userForm.department">
+                    <mat-icon matSuffix>search</mat-icon>
+                    <mat-autocomplete  #departmentAuto="matAutocomplete" [displayWith]="getMapValue.bind(this, 'department')">
+                    @for(entry of filteredDepartments(); track entry[0]) {
+                            <mat-option [value]="entry[0]">
+                                {{ entry[1] }}
+                            </mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+                @if(userForm.department().touched() && userForm.department().invalid()) {
+                    @for(error of userForm.department().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
 
-    <div class="form-field-wrapper">
-        <label>Status</label>
-        <mat-form-field appearance="outline">
-            <mat-select placeholder="Select Status">
-                <mat-option value="one">First option</mat-option>
-                <mat-option value="two">Second option</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+            <div class="form-field-wrapper">
+                <label>Role</label>
+                <mat-form-field appearance="outline">
+                    <mat-select placeholder="Select Role" [field]="userForm.role">
+                        @for(entry of roles().entries(); track entry[0]) {
+                            <mat-option [value]="entry[0]">
+                                {{ entry[1] }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                @if(userForm.role().touched() && userForm.role().invalid()) {
+                    @for(error of userForm.role().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
 
-    <div class="form-field-wrapper full-row">
-        <label>Address</label>
-        <mat-form-field appearance="outline">
-            <textarea matInput rows="4" placeholder="Description"></textarea>
-        </mat-form-field>
-    </div>
-</form>
+            <div class="form-field-wrapper">
+                <label>Status</label>
+                <mat-form-field appearance="outline">
+                    <mat-select placeholder="Select Status" [field]="userForm.status">
+                        @for(entry of statuses().entries(); track entry[0]) {
+                            <mat-option [value]="entry[0]">
+                                {{ entry[1] }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                @if(userForm.status().touched() && userForm.status().invalid()) {
+                    @for(error of userForm.status().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
+
+            <div class="form-field-wrapper-2 full-row">
+                <label>Address</label>
+                <mat-form-field appearance="outline">
+                    <textarea matInput rows="4" placeholder="Description" [field]="userForm.address"></textarea>
+                </mat-form-field>
+                @if(userForm.address().touched() && userForm.address().invalid()) {
+                    @for(error of userForm.address().errors(); track error){
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }       
+            </div>
+
+            <div class="full-row action-btns">
+                <button matButton="outlined" style="width: 90px;" type="button" routerLink="/users">Back</button>
+                <button matButton="filled" style="width: 90px;" type="submit" [disabled]="userForm().submitting()">Submit</button>
+            </div>
+        </form>
+    }
+</div>

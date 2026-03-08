@@ -1,58 +1,78 @@
-<form class="form-grid">
-    <!-- User Details -->
-     <div class="full-row">
-        <p>User Details</p>
-    </div>
+<div class="user-detail">
+    <div class="form-grid">
+        <!-- User Details -->
+        <div class="full-row title">
+            <p>User Details</p>
+        </div>
 
-    <div class="form-field-wrapper">
-        <label>Full Name</label>
-        <p>Full Name</p>
-    </div>
+        @if(loading() === true){
+            <div class="loader">
+                <app-loader [diameter]="100" [stroke]="6"></app-loader>
+            </div>
+        }
+        @else{
 
-    <div class="form-field-wrapper">
-        <label>Email</label>
-        <p>Email</p>
-    </div>
+            @if(user() !== null){
 
-    <div class="form-field-wrapper">
-        <label>Mobile Number</label>
-        <p>Mobile Number</p>
-    </div>
+                <div class="form-field-wrapper">
+                    <label>Full Name</label>
+                    <p>{{ user()?.name }}</p>
+                </div>
 
-    <div class="form-field-wrapper">
-        <label>DOB</label>
-        <p>DOB</p>
-    </div>
+                <div class="form-field-wrapper">
+                    <label>Email</label>
+                    <p>{{ user()?.email }}</p>
+                </div>
 
-    <div class="form-field-wrapper">
-        <label>Gender</label>
-        <p>Gender</p>
-    </div>
+                <div class="form-field-wrapper">
+                    <label>Mobile Number</label>
+                    <p>{{ user()?.mobile_no }}</p>
+                </div>
 
-    <div class="form-field-wrapper">
-        <label>Designation</label>
-        <p>Designation</p>
-    </div>
+                <div class="form-field-wrapper">
+                    <label>DOB</label>
+                    <p>{{ user()?.dob | date:'dd/MM/yyyy' }}</p>
+                </div>
 
-    <div class="form-field-wrapper">
-        <label>Department</label>
-        <p>Department</p>
-    </div>
-    
-    <div class="form-field-wrapper">
-        <label>Role</label>
-        <p>Role</p>
-    </div>
+                <div class="form-field-wrapper">
+                    <label>Gender</label>
+                    <p>{{ getMapValue('gender', user()?.gender) }}</p>
+                </div>
 
-    <div class="form-field-wrapper">
-        <label>Status</label>
-        <p>Status</p>
+                <div class="form-field-wrapper">
+                    <label>Designation</label>
+                    <p>{{ getMapValue('designation', user()?.designation) }}</p>
+                </div>
+
+                <div class="form-field-wrapper">
+                    <label>Department</label>
+                    <p>{{ getMapValue('department', user()?.department) }}</p>
+                </div>
+                
+                <div class="form-field-wrapper">
+                    <label>Role</label>
+                    <p>{{ getMapValue('role', user()?.role) }}</p>
+                </div>
+
+                <div class="form-field-wrapper">
+                    <label>Status</label>
+                    <p>{{ getMapValue('status', user()?.status) }}</p>
+                </div>
+
+                <div class="form-field-wrapper">
+                    <label>Address</label>
+                    <p>{{ user()?.address }}</p>
+                </div>
+            }
+            @else {
+                <div class="full-row no-data">
+                    <img src="images/no_data.png" alt="No Data">
+                </div>
+            }
+
+            <div class="full-row action-btns">
+                <button matButton="outlined" style="width: 90px;" type="button" routerLink="/users">Back</button>
+            </div>
+        }
     </div>
-
-     <div class="form-field-wrapper">
-        <label>Address</label>
-        <p>Address</p>
-    </div>
-
-</form>
-
+</div>

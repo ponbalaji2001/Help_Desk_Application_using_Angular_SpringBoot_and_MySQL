@@ -1,0 +1,33 @@
+.snack-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+
+    .close-btn {
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+    }
+
+    .close-btn mat-icon {
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+        opacity: 0.9;
+    }
+}
+
+.snack-message { 
+    flex: 1; 
+}
+
+.snackbar-icon {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+
+
+

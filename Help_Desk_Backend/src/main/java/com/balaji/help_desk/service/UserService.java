@@ -20,6 +20,7 @@ import com.balaji.help_desk.enums.UserStatus;
 import com.balaji.help_desk.model.UserModel;
 import com.balaji.help_desk.repository.UserRepository;
 import com.balaji.help_desk.spec.UserSpecification;
+import com.balaji.help_desk.util.PasswordGeneratorUtil;
 
 @Service
 public class UserService {
@@ -40,11 +41,13 @@ public class UserService {
             String sortDir
     ) {
         
-        Sort sort = Sort.unsorted(); 
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         if (sortBy != null && !sortBy.isBlank()) {
             sort = Sort.by(sortBy); 
             if ("desc".equalsIgnoreCase(sortDir)) {
                 sort = sort.descending();
+            }else {
+                sort = sort.ascending();
             }
         }
 
@@ -65,7 +68,12 @@ public class UserService {
 	}
 	
 	public UserModel saveUser(UserModel user) {
-        return userRepository.save(user);
+		user.setPassword(PasswordGeneratorUtil.generate());
+		UserModel savedUser = userRepository.save(user); 
+		savedUser.setCode(String.format("U%04d", savedUser.getId()));
+		savedUser = userRepository.save(savedUser); 
+		
+        return savedUser;
     }
 	
 	public UserModel updateUser(Long id, UserModel user) {

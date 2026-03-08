@@ -1,0 +1,19 @@
+<div class="alert-dialog">
+    <p mat-dialog-title>
+        <mat-icon class="alert-icon alert-{{ data.type }}">{{ data.icon }}</mat-icon>
+        {{ data.title }}
+    </p>
+
+    <mat-dialog-content>
+        <p style="font-size: 15.5px;">{{ data.message }}</p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button matButton="outlined" (click)="onCancel()">
+            {{ data.cancelText || 'Cancel' }}
+        </button>
+        <button matButton="filled" (click)="onConfirm()">
+            {{ data.confirmText || 'Confirm' }}
+        </button> 
+    </mat-dialog-actions>
+</div>

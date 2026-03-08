@@ -51,15 +51,45 @@ body {
     header-headline-size: 14.5px
   ));
 
-  .cdk-overlay-pane .mat-mdc-option {
-    
-    .mdc-list-item__primary-text {
-      font-size: 14px;
-    }
+  @include mat.button-toggle-overrides((
+    selected-state-background-color: #e0e2ec,
+    selected-state-text-color: #1A1B1F
+  ));
 
+  @include mat.snack-bar-overrides((
+    button-color: #1A1B1F
+  ));
+ 
+  .cdk-overlay-pane .mat-mdc-option .mdc-list-item__primary-text {
+    font-size: 14px;
   }
 
   .mat-mdc-select-arrow{
     color: #6b7280;
   }
+
+  .snackbar-success .mdc-snackbar__surface{
+    background-color: #E8F5E9;   
+    color: #1B5E20; 
+  }
+
+  .snackbar-error .mdc-snackbar__surface{
+    background-color: #FDECEA;   
+    color: #B3261E; 
+  }
+
+  .snackbar-warning .mdc-snackbar__surface{
+    background-color:  #FFF3E0;  
+    color: #E65100;
+  }
+
+  .snackbar-info .mdc-snackbar__surface{
+    background-color: #E3F2FD;  
+    color: #0D47A1; 
+  }
+
+  .snackbar-spacing {
+    margin-top: 18px !important; 
+  }
+
 }

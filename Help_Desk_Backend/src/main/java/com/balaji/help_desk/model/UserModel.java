@@ -9,6 +9,7 @@ import com.balaji.help_desk.enums.Gender;
 import com.balaji.help_desk.enums.Role;
 import com.balaji.help_desk.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +18,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,9 +27,10 @@ import jakarta.persistence.Table;
 public class UserModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique = true, updatable = false)
     private Long id;
 	
-	@Column(unique = true, nullable = false)
+	@Column(unique = true)
 	private String code;
 	
 	private String name;
@@ -34,6 +38,7 @@ public class UserModel {
 	@Column(unique = true, nullable = false)
 	private String email;
 	
+	@JsonProperty("mobile_no")
 	@Column(name = "mobile_no", unique = true)
 	private String mobileNo;
 	
@@ -63,8 +68,22 @@ public class UserModel {
 	@Column(name = "first_login", nullable = false)
 	private Boolean firstLogin = true;
 	
-	@Column(name = "created_at")
+	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt;
+	
+	@PrePersist
+	public void prePersist() {
+	    if(this.createdAt == null) {
+	        this.createdAt = LocalDateTime.now();
+	    }
+	}
+	
+	@PostPersist
+    private void generateCode() {
+        if (this.code == null) {
+            this.code = String.format("U%04d", this.id); 
+        }
+    }
 	
 	public Long getId() {
 		return id;

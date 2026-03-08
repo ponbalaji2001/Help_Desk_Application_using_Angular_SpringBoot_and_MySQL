@@ -1,6 +1,6 @@
-import { Component, computed, ElementRef, signal, Signal, ViewChild } from '@angular/core';
+import { Component, computed, effect, inject, signal, Signal, untracked, ViewChild, WritableSignal } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Sort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { CustomTable } from '../../../shared/custom-table/custom-table';
 import { UserStore } from '../../../store/user.store';
 import { UserModel } from '../../../model/user.model';
@@ -13,14 +13,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Field, form } from '@angular/forms/signals'
 import { MatIconModule } from '@angular/material/icon';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-
-interface FilterModel{
-  search: string,
-  department: string,
-  designation: string,
-  role: string,
-  status: string
-}
+import { Loader } from "../../../shared/loader/loader";
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { AlertService } from '../../../service/alert.service';
 
 @Component({
   selector: 'app-user-list',
@@ -28,15 +24,17 @@ interface FilterModel{
     CustomTable,
     MatCardModule,
     MatButtonModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
     MatAutocompleteModule,
     MatIconModule,
     MatButtonToggleModule,
-    Field
-  ],
+    Field,
+    Loader,
+    RouterLink
+],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
 })
@@ -44,8 +42,6 @@ interface FilterModel{
 export class UserList {
   users!: Signal<UserModel[]>;
   totalUsers!: Signal<number>;
-  pageIndex!: Signal<number>;
-  pageSize!: Signal<number>;
   loading!: Signal<boolean>;
   colNames: string[] = ['index', 'code', 'name', 'email', 'department', 'designation', 'role', 'status', 'action'];
   mapColNames: string[] = ['department', 'designation', 'role', 'status'];
@@ -53,56 +49,87 @@ export class UserList {
   designations = signal(new Map<string, string>());
   roles = signal(new Map<string, string>());
   statuses = signal(new Map<string, string>());
+  pageLoading: boolean = true;
+  isShowFilter: WritableSignal<boolean> = signal(false);
 
-  formControls = signal<FilterModel>({
-    search: '',
-    department: '',
-    designation: '',
-    role: '',
-    status: ''
-  })
+  @ViewChild(MatSort) sort!: MatSort;
 
-  filterForm = form(this.formControls);
-  
-  constructor(private store: UserStore){
+  private store = inject(UserStore);
+  filterForm = form(this.store.filters);
+
+  constructor(
+    private router: Router, 
+    private alert: AlertService,
+  ) {
     this.users = this.store.users;
     this.totalUsers = this.store.dataSize
-    this.pageIndex = this.store.pageIndex;
-    this.pageSize = this.store.pageSize;
     this.loading = this.store.loading;
     this.departments = this.store.departments;
     this.designations = this.store.designations;
     this.roles = this.store.roles;
     this.statuses = this.store.statuses;
+
+    effect(() => {
+      if (this.pageLoading) return;
+
+      const filters = untracked(() => this.filterForm().value());
+
+      this.filterForm.search().value(); 
+      this.filterForm.page().value();
+      this.filterForm.size().value();
+      this.filterForm.sortBy().value();
+      this.filterForm.sortDir().value();
+      this.filterForm.role().value();
+
+      this.store.getUsers(filters);
+    });
+
   }
 
   ngOnInit(): void {
-    this.store.getUsers({page:0, size:10});
     this.store.getDesignations();
     this.store.getDepartments();
     this.store.getRoles();
     this.store.getStatuses();
+    this.pageLoading = false;
   }
 
   onSortChange(sort: Sort) {
-    console.log(sort.active);   
-    console.log(sort.direction); 
+    this.filterForm().value.update((prev) => ({
+      ...prev,
+      sortBy: sort.direction ? sort.active : '',
+      sortDir: sort.direction || '',
+      page: 0
+    }));
   }
 
   onPageChange(event: PageEvent) {
-    this.store.setPage(event);
+    this.filterForm().value.update((prev) => ({
+      ...prev,
+      page: event.pageIndex,
+      size: event.pageSize,
+    }));
   }
 
   onView(id: string){
-    console.log(id);
+    this.router.navigate(['/user/detail', id]);
   }
 
   onEdit(id: string){
-    console.log(id);
+    this.router.navigate(['/user/edit', id]);
   }
 
   onDelete(id: string){
-    console.log(id);
+    this.alert.open(
+      'warning',
+      'Delete User',
+      `Are you sure you want to delete user ${id} ?`,
+      'Yes',
+      'No',
+      () => {
+        this.store.deleteUser(Number(id));
+      }
+    );
   }
 
   getMapValue = (column: string, value: any) =>{
@@ -121,18 +148,60 @@ export class UserList {
   }
 
   filteredDepartments = computed(() => {
-    // const search = (this.departmentCtrl.value ?? '').toString().trim().toLowerCase();
+    const search = this.filterForm.department().value().trim().toLowerCase();
+    const allDepartments = Array.from(this.departments().entries());
 
-    return Array.from(this.departments().entries()).filter(
-      ([key]) => key.toLowerCase().includes('')
+    if (!search) {
+      return allDepartments;
+    }
+
+    return allDepartments.filter(([_, value]) => 
+      value.toLowerCase().includes(search)
     );
   });
 
   filteredDesignations = computed(() => {
-    // const search = (this.designationCtrl.value ?? '').toString().trim().toLowerCase();
+    const search = this.filterForm.designation().value().trim().toLowerCase();
+    const allDesignations = Array.from(this.designations().entries());
 
-    return Array.from(this.designations().entries()).filter(
-      ([key, value]) => value.toLowerCase().includes('')
+    if (!search) {
+      return allDesignations;
+    }
+
+    return allDesignations.filter(([_, value]) => 
+      value.toLowerCase().includes(search)
     );
   });
+
+  activeFilterCount = computed(() => {  
+    const filter = this.filterForm().value();
+
+    return [
+      filter.department,
+      filter.designation,
+      filter.status
+    ].filter(v => !!v).length;
+  });
+
+  clearFilter(){
+    this.filterForm().value.update((prev) => ({
+      ...prev,
+      department: '',
+      designation: '',
+      status: '',
+      page: 0
+    }));
+
+    this.applyFilter();
+  }
+
+  applyFilter(){
+    this.filterForm().value.update((prev) => ({
+      ...prev,
+      page: 0
+    }));
+
+    this.store.getUsers(this.filterForm().value());
+  }
+
 }

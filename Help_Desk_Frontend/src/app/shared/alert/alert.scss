@@ -1,0 +1,46 @@
+
+.alert-dialog {
+    .mat-mdc-dialog-title{
+        padding: 12px 8px 0px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 14px;
+        font-size: 20px;
+        font-weight: 500px;
+    }
+
+    .mat-mdc-dialog-content>:last-child {
+        padding: 12px 0px 20px 0px;
+    }
+
+    .alert-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        font-size: 20px;
+    }
+
+    .alert-success {
+        background-color: #E8F5E9;
+        color: #1B5E20; 
+    }
+
+    .alert-error {  
+        background-color: #FDECEA;
+        color: #B3261E; 
+    }
+
+    .alert-warning {
+        background-color:  #FFF3E0;
+        color: #E65100;
+    }
+
+    .alert-info {
+        background-color: #E3F2FD;
+        color: #0D47A1; 
+    }
+}

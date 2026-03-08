@@ -1,43 +1,76 @@
-.table-header{
-  padding: 10px;
-
-  .title{
-    padding-bottom: 15px;
+.users-list{
+  .loader{
+    height: 600px;
+    display: flex;
+    align-items: center;   
+    justify-content: center; 
   }
 
-  .table-header-actions{
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    column-gap: 20px;  
-    align-items: center;
-    padding-bottom: 5px;
-  }
+  .table-header{
+    padding: 10px;
 
-  ::ng-deep .table-header-actions
-    .mat-mdc-form-field-subscript-wrapper {
-      display: none 
+    .title{
+      padding-bottom: 15px;
     }
 
-  .filter-card{
-    margin-top: 14px;
-
-    .form-grid {
-      padding-top: 20px;
+    .table-header-actions{
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: 40px;  
-      row-gap: 16px;      
+      grid-template-columns: auto 1fr auto auto auto;
+      column-gap: 10px;  
+      align-items: center;
+      padding-bottom: 5px;
+
+      .mat-mdc-icon-button{
+        background-color: #EBEDF5;
+      }
+
     }
 
-    .full-row {
-      grid-column: span 2;
+    ::ng-deep .table-header-actions .mat-mdc-form-field-subscript-wrapper {
+        display: none 
     }
 
-    .form-field-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .filter-card{
+      margin-top: 10px;
+      padding: 14px 8px;
+
+      .mat-mdc-card-header {
+        padding: 0px 14px;
+      }
+
+      .filter-count {
+        font-size: 19px;   
+        font-weight: normal;  
+        opacity: 0.7;         
+      }
+
+      .mat-mdc-icon-button{
+        background-color: #F0F2F8;
+      }
+
+      .form-grid {
+        padding-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 40px;  
+        row-gap: 16px;      
+      }
+
+      .full-row {
+        grid-column: span 2;
+      }
+
+      .form-field-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .action-btns{
+        display: flex; 
+        justify-content: flex-end; 
+        gap: 14px; 
+      }
     }
   }
 }
-
